@@ -11,6 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('todolist');
-});
+Route::get('/', 'TodoController@index');
+
+Route::post('/add', 'TodoController@add')->name('add');
+Route::post('/del', 'TodoController@del')->name('del');
+Route::post('/upd', 'TodoController@upd')->name('upd');
+

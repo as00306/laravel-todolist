@@ -42,7 +42,8 @@
 
                 <div class="panel-body">
                     <!-- New Task Form -->
-                    <form action="" method="POST" class="form-horizontal">
+                    <form action="{{ route('add') }}" method="POST" class="form-horizontal">
+                        {{ csrf_field() }}
                         <!-- Task Name -->
                         <div class="form-group">
                             <label for="task-name" class="col-sm-3 control-label">Task</label>
@@ -76,26 +77,17 @@
                             <th>&nbsp;</th>
                         </thead>
                         <tbody>
+                        @foreach($todos as $todo)
                             <tr>
-                                <td class="col-sm-6">
-                                    <del>Jogging</del>
-                                </td>
-                                <!-- Task Buttons -->
-                                <td class="col-sm-6">
-                                        <button type="submit" class="btn btn-success" disabled ><i class="fa fa-btn fa-thumbs-o-up"></i>completed</button>
-                                        <button type="submit" class="btn btn-primary"><i class="fa fa-btn fa-pencil"></i>edit</button>
-                                        <button type="submit" class="btn btn-danger"><i class="fa fa-btn fa-trash"></i>delete</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-sm-6">Homework</td>
-                                <!-- Task Buttons -->
+                                <td class="col-sm-6">{{ $todo->name }}</td>
+                                <!-- Task Buttons --> 
                                 <td class="col-sm-6">
                                         <button type="submit" class="btn btn-success"><i class="fa fa-btn fa-thumbs-o-up"></i>completed</button>
-                                        <button type="submit" class="btn btn-primary"><i class="fa fa-btn fa-pencil"></i>edit</button>
-                                        <button type="submit" class="btn btn-danger"><i class="fa fa-btn fa-trash"></i>delete</button>
+                                        <button type="submit" class="btn btn-primary" onclick="upd({{ $todo->id }})"><i class="fa fa-btn fa-pencil"></i>edit</button>
+                                        <button type="submit" class="btn btn-danger" onclick="del({{ $todo->id }})"><i class="fa fa-btn fa-trash"></i>delete</button>
                                 </td>
                             </tr>
+                        @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -104,3 +96,29 @@
     </div>
 </body>
 </html>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+
+    function del(id){
+
+        $.post("/del", { "id": id, "_token": "{{ csrf_token() }}"} ,function(){
+            location.reload()
+        });
+
+    }
+
+    function upd(id){
+
+      var newName = $("#task-name").val();
+
+      $.post("/upd", { "id": id, "name": newName, "_token": "{{ csrf_token() }}"},
+            function(){
+                location.reload()
+            });
+
+
+    }
+
+
+</script>
